@@ -1597,6 +1597,11 @@ namespace Microsoft.EntityFrameworkCore.Migrations
                 {
                     builder.Append("END");
                 }
+
+                if (operation[SqlServerAnnotationNames.Hidden] is bool isHidden && isHidden)
+                {
+                    builder.Append(" HIDDEN");
+                }
             }
 
             builder.Append(operation.IsNullable ? " NULL" : " NOT NULL");

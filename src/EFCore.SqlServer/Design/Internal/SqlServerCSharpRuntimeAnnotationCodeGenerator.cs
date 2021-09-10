@@ -54,6 +54,7 @@ namespace Microsoft.EntityFrameworkCore.SqlServer.Design.Internal
                 annotations.Remove(SqlServerAnnotationNames.IdentityIncrement);
                 annotations.Remove(SqlServerAnnotationNames.IdentitySeed);
                 annotations.Remove(SqlServerAnnotationNames.Sparse);
+                annotations.Remove(SqlServerAnnotationNames.Hidden);
 
                 if (!annotations.ContainsKey(SqlServerAnnotationNames.ValueGenerationStrategy))
                 {
