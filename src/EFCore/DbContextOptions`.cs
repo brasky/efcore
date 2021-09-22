@@ -28,7 +28,7 @@ namespace Microsoft.EntityFrameworkCore
         ///     to create instances of this class and it is not designed to be directly constructed in your application code.
         /// </summary>
         public DbContextOptions()
-            : this(ImmutableSortedDictionary.Create<Type, IDbContextOptionsExtension>(TypeFullNameComparer.Instance))
+            : base()
         {
         }
 
@@ -44,12 +44,25 @@ namespace Microsoft.EntityFrameworkCore
         {
         }
 
+        private DbContextOptions(
+           ImmutableSortedDictionary<Type, (IDbContextOptionsExtension Extension, int Ordinal)> extensions)
+            : base(extensions)
+        {
+        }
+
         /// <inheritdoc />
         public override DbContextOptions WithExtension<TExtension>(TExtension extension)
         {
             Check.NotNull(extension, nameof(extension));
 
-            return new DbContextOptions<TContext>(ExtensionsMap.SetItem(extension.GetType(), extension));
+            var type = extension.GetType();
+            var ordinal = ExtensionsMap.Count;
+            if (ExtensionsMap.TryGetValue(type, out var existingValue))
+            {
+                 ordinal = existingValue.Ordinal;
+            }
+
+            return new DbContextOptions<TContext>(ExtensionsMap.SetItem(type, (extension, ordinal)));
         }
 
         /// <summary>
